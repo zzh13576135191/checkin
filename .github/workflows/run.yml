@@ -25,7 +25,7 @@ jobs:
         # 理论上也可以自己命令行安装node
         uses: actions/setup-node@v1
         with:
-          node-version: '12.x'
+          node-version: '16.x'
       - name: install axios
         run: npm install axios
       - name: main
