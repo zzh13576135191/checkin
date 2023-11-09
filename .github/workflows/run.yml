@@ -1,36 +1,21 @@
 name: run
+
 on:
+  workflow_dispatch:
   push:
-    # 分支 现在默认是main，而不是master
-    branches: [ main ]
-    # 将工作流程配置为在至少一个文件不匹配paths-ignore的paths时运行
-    # 忽略README.md和imgs文件夹
-    paths-ignore:
-      - 'README.md'
-      - 'imgs/**'
   schedule:
-    # 定时运行 UTC 0点30分(北京时间 00点30分)
-    - cron: 30 0 * * *
-  # 标星时运行
-  watch:
-    types: [started]
+    - cron: 30 00 * * *
+
 jobs:
-  build:
+  run:
     runs-on: ubuntu-latest
     steps:
-      # Checks out a copy of your repository on the ubuntu-latest machine
-      # 必须，不然到执行 node checkin.js 时会报错
-      - uses: actions/checkout@v2
-      - name: setup Node.js
-        # 理论上也可以自己命令行安装node
-        uses: actions/setup-node@v1
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
         with:
-          node-version: '16.x'
-      - name: install axios
-        run: npm install axios
-      - name: main
-        run: node main.js
-        # 设置环境变量
+          node-version: 18
+      - run: npm ci
+      - run: npm run main
         env:
-          SCKEY: ${<!-- -->{ secrets.SCKEY }}
-          COOKIE: ${<!-- -->{ secrets.COOKIE }}
+          GLADOS: ${{ secrets.GLADOS }}
+          NOTIFY: ${{ secrets.NOTIFY }}
